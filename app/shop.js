@@ -154,7 +154,6 @@ const carritoOffcanvas = (productoId) => {
                         <p id"cantidad${producto.id}"> Cantidad ${producto.cantidad}</p>
                         <button id "eliminar${producto.id}" class ="btn-eliminar"><i class="fa-solid fa-trash-can"></i></button> 
                     </div>
-
                     <div id= "carrito-footer">
                         <p>TOTAL</p>
                         <p class="carrito-total"></p>
@@ -163,11 +162,15 @@ const carritoOffcanvas = (productoId) => {
 
     const bodyOffcanvas = document.querySelector(".offcanvas-body");
     bodyOffcanvas.appendChild(div);
+    guardarStorage();
 }
 
 carritoOffcanvas();
 
-
+function guardarStorage (){
+    let carritoGuardado = localStorage.setItem("Carrito", JSON.stringify(carritoDeCompras))
+    console.log(carritoGuardado)
+}
 
 
 
