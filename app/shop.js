@@ -86,35 +86,49 @@ const inventarioProductos = [
 
 const contenedorProductos = document.getElementById("contenedor-productos");
 
-// Función para mostrar los productos: uso el método for each para acceder a cada elemento del array "inventarioProductos" en JS.  
+// función para mostrar dinámicamente en el dom los productos, consultando en stock.json.
 
-const mostrarProductos = (inventarioProductos) => {
-    inventarioProductos.forEach(producto => {
-        const article = document.createElement("article"); // genero el elemento article
+const mostrarProductos = async () => {
+    try {
+        // ejecuto este código y si hay algún error lo capturo con catch. Await para esperar la request, y lo almaceno en la variable "response"
+        const response = await fetch ("../stock.json") // --> en formato Json
+        console.log(response)
 
-        article.classList.add("items"); // agrego clase ".items"
+        const data = await response.json(); // parseo, formato array de objetos
+        console.log(data);
+        
+        data.forEach(producto => {
+            const article = document.createElement("article"); // genero el elemento article
+    
+            article.classList.add("items"); // agrego clase ".items"
+    
+            article.innerHTML += `<div class="product-img" id="item-img1" > 
+                        <a href="#"><img src="${producto.img}"></a>
+                    </div>
+                    <div class="product-name">
+                        <h5><a href="#">${producto.nombre}</a></h5>
+                    </div>
+                    <div class="description">
+                        <p>${producto.desc}<br>
+                        ${producto.dimensiones}
+                        </p>
+                    </div>
+                    <div class="product-price">
+                        <span class="price">$ ${producto.precio}</span>
+                        <button type="button" class="btn agregar-al-carrito btn-dark border-0 rounded-0" id="btn${producto.id}">Agregar al carrito</button>
+                    </div>`
+                    
+            contenedorProductos.appendChild(article) 
+        })
 
-        article.innerHTML += `<div class="product-img" id="item-img1" > 
-                    <a href="#"><img src="${producto.img}"></a>
-                </div>
-                <div class="product-name">
-                    <h5><a href="#">${producto.nombre}</a></h5>
-                </div>
-                <div class="description">
-                    <p>${producto.desc}<br>
-                    ${producto.dimensiones}
-                    </p>
-                </div>
-                <div class="product-price">
-                    <span class="price">$ ${producto.precio}</span>
-                    <button type="button" class="btn agregar-al-carrito btn-dark border-0 rounded-0" id="btn${producto.id}">Agregar al carrito</button>
-                </div>`
-                
-        contenedorProductos.appendChild(article) 
-    })
+        return data;
+
+    } catch (error) {
+        console.log("Hubo un error", error) //muestro el error
+    }
 }
 
-mostrarProductos(inventarioProductos); // incluyo como parámetro el array de objetos
+mostrarProductos();
 
 // función para agregar artículo al carrito
 
